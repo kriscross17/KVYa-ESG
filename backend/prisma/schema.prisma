@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OPERATOR
+  MANAGER
+  ADMIN
+}
+
+enum SubmissionStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  RETURNED
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  name         String
+  passwordHash String
+  role         Role
+  officeId     String?
+  office       Office?      @relation(fields: [officeId], references: [id])
+  submissions  Submission[] @relation("OperatorSubmissions")
+  auditLogs    AuditLog[]
+  syncOps      SyncOperation[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Office {
+  id           String       @id @default(cuid())
+  officeCode   String       @unique
+  name         String       @unique
+  state        String
+  district     String?
+  region       String?
+  pincode      String?
+  tier         String?
+  latitude     Float?
+  longitude    Float?
+  users        User[]
+  submissions  Submission[]
+  createdAt    DateTime     @default(now())
+}
+
+model Submission {
+  id                 String           @id @default(cuid())
+  clientId           String?          @unique
+  officeId           String
+  operatorId         String
+  reportingPeriod    String
+  status             SubmissionStatus @default(DRAFT)
+  managerComment     String?
+  createdAt          DateTime         @default(now())
+  submittedAt        DateTime?
+  reviewedAt         DateTime?
+  updatedAt          DateTime         @updatedAt
+  version            Int              @default(1)
+  office             Office           @relation(fields: [officeId], references: [id])
+  operator           User             @relation("OperatorSubmissions", fields: [operatorId], references: [id])
+  buildingData       BuildingData?
+  operationalData    OperationalData?
+  evidence           Evidence[]
+  history            SubmissionHistory[]
+  auditLogs          AuditLog[]
+
+  @@index([officeId, reportingPeriod])
+  @@index([status])
+}
+
+model BuildingData {
+  id                     String     @id @default(cuid())
+  submissionId           String     @unique
+  buildingType           String?
+  areaSqFt               Float?
+  electricityConsumption Float?
+  waterUsage             Float?
+  wasteGenerated         Float?
+  renewableEnergy        Float?
+  fuelConsumption        Float?
+  greenCover             Float?
+  submission             Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+}
+
+model OperationalData {
+  id                       String     @id @default(cuid())
+  submissionId             String     @unique
+  totalEmployees           Int?
+  femaleEmployees          Int?
+  digitalTransactionsPct   Float?
+  energyUsageKwh           Float?
+  trainingHoursPerEmployee Float?
+  communityProgramsCount  Int?
+  grievancesResolved       Int?
+  grievancesTotal          Int?
+  submission               Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+}
+
+model Evidence {
+  id             String     @id @default(cuid())
+  submissionId   String
+  filename       String
+  storedFilename String
+  mimeType       String
+  sizeBytes      Int
+  category       String?
+  ocrText        String?
+  ocrConfidence  Float?
+  uploadedAt     DateTime   @default(now())
+  submission     Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}
+
+model SubmissionHistory {
+  id           String           @id @default(cuid())
+  submissionId String
+  status       SubmissionStatus
+  comment      String?
+  actorId      String?
+  createdAt    DateTime         @default(now())
+  submission   Submission       @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id           String      @id @default(cuid())
+  submissionId String?
+  userId       String?
+  action       String
+  field        String?
+  oldValue     String?
+  newValue     String?
+  metadata     Json?
+  createdAt    DateTime    @default(now())
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([submissionId, createdAt])
+}
+
+model SyncOperation {
+  id         String   @id
+  userId     String
+  operation  String
+  result     Json?
+  processedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* =====================================================
+   BRSR REPORT - PRINT / PDF
+   ===================================================== */
+
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm 15mm 10mm;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #0f172a !important;
+
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide application UI */
+  .no-print,
+  nav,
+  aside,
+  header:not(.print-report header) {
+    display: none !important;
+  }
+
+  /* Remove application layout */
+  #root {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Main report */
+  .print-report {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    overflow: visible !important;
+  }
+
+  /* Report header */
+  .print-report > header {
+    padding: 0 0 8mm 0 !important;
+
+    border-bottom: 1px solid #cbd5e1 !important;
+
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Report body */
+  .print-report > section {
+    padding: 7mm 0 0 0 !important;
+  }
+
+  /* Don't split cards */
+  .print-report .border {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Headings stay with content */
+  .print-report h1,
+  .print-report h2,
+  .print-report h3 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* ===============================
+     TABLE
+     =============================== */
+
+  .print-report table {
+    width: 100% !important;
+
+    border-collapse: collapse !important;
+
+    table-layout: fixed !important;
+
+    font-size: 8pt !important;
+  }
+
+  .print-report thead {
+    display: table-header-group !important;
+  }
+
+  .print-report tfoot {
+    display: table-footer-group !important;
+  }
+
+  .print-report tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-report th,
+  .print-report td {
+    padding: 4px 5px !important;
+
+    line-height: 1.25 !important;
+
+    vertical-align: middle !important;
+  }
+
+  /* Office */
+  .print-report th:nth-child(1),
+  .print-report td:nth-child(1) {
+    width: 28% !important;
+    text-align: left !important;
+  }
+
+  /* Period */
+  .print-report th:nth-child(2),
+  .print-report td:nth-child(2) {
+    width: 15% !important;
+    text-align: left !important;
+  }
+
+  /* Electricity */
+  .print-report th:nth-child(3),
+  .print-report td:nth-child(3) {
+    width: 20% !important;
+    text-align: right !important;
+  }
+
+  /* Renewable */
+  .print-report th:nth-child(4),
+  .print-report td:nth-child(4) {
+    width: 13% !important;
+    text-align: right !important;
+  }
+
+  /* Employees */
+  .print-report th:nth-child(5),
+  .print-report td:nth-child(5) {
+    width: 12% !important;
+    text-align: right !important;
+  }
+
+  /* ESG */
+  .print-report th:nth-child(6),
+  .print-report td:nth-child(6) {
+    width: 12% !important;
+    text-align: right !important;
+  }
+
+  /* ===============================
+     COLORS
+     =============================== */
+
+  .print-report .bg-slate-50 {
+    background: #f8fafc !important;
+  }
+
+  .print-report .bg-amber-50 {
+    background: #fffbeb !important;
+  }
+
+  /* ===============================
+     REMOVE UI STYLING
+     =============================== */
+
+  .print-report .rounded-xl,
+  .print-report .rounded-2xl {
+    border-radius: 0 !important;
+  }
+
+  /* ===============================
+     PREVENT HORIZONTAL OVERFLOW
+     =============================== */
+
+  .print-report,
+  .print-report section,
+  .print-report div {
+    overflow: visible !important;
+  }
+
+  /* ===============================
+     LINKS
+     =============================== */
+
+  a::after {
+    content: none !important;
+  }
+}

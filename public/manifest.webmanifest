@@ -1,0 +1,9 @@
+{
+  "name": "India Post BRSR / ESG Platform",
+  "short_name": "India Post ESG",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1d4ed8",
+  "description": "Offline-capable BRSR and ESG reporting prototype for India Post"
+}
