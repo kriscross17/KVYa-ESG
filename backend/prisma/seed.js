@@ -7,7 +7,19 @@ import { PrismaClient, Role, SubmissionStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dummyPath = path.resolve(__dirname, '../../dummy-data/post-offices-140.json');
+const dummyCandidates = [
+  path.resolve(__dirname, '../../dummy-data/post-offices-140.json'),
+  path.resolve(__dirname, '../dummy-data/post-offices-140.json'),
+];
+
+const dummyPath = dummyCandidates.find((candidate) => fs.existsSync(candidate));
+
+if (!dummyPath) {
+  throw new Error(
+    `Dummy data file not found. Tried:\n${dummyCandidates.join('\n')}`
+  );
+}
+
 const offices = JSON.parse(fs.readFileSync(dummyPath, 'utf8'));
 
 async function main() {
