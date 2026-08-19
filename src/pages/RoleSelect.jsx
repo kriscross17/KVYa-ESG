@@ -41,7 +41,7 @@ export default function RoleSelect() {
       setOperatorName(user.name || 'Operator');
       setOperatorOffice(user.officeId || null, user.office?.name || '');
       setRole(user.role === 'OPERATOR' ? 'operator' : 'manager');
-      window.location.assign(user.role === 'OPERATOR' ? '/operator' : '/manager');
+      navigate(user.role === 'OPERATOR' ? '/operator' : '/manager');
     } catch (error) { setLoginError(error.message || 'Login failed'); }
     finally { setLoggingIn(false); }
   };
