@@ -1,4 +1,4 @@
-const CACHE = 'india-post-brsr-shell-v2';
+const CACHE = 'india-post-brsr-shell-v3';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
