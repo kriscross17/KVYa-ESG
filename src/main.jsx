@@ -12,12 +12,12 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <SubmissionProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
-      </SubmissionProvider>
-    </BrowserRouter>
+   <HashRouter>
+  <SubmissionProvider>
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  </SubmissionProvider>
+</HashRouter>
   </React.StrictMode>
 );
